@@ -6,27 +6,27 @@
 <title>QR Creator — offline QR code generator</title>
 <style>
   :root {
-    --bg: #0f1115;
-    --panel: #171a21;
-    --panel-2: #1e222b;
-    --border: #2a2f3a;
-    --text: #e7eaf0;
-    --muted: #9aa3b2;
-    --accent: #5b8cff;
-    --accent-2: #3f6fe0;
+    --bg: #0c0d12;
+    --panel: #15171e;
+    --panel-2: #1b1e27;
+    --border: #292d39;
+    --text: #f5f6f8;
+    --muted: #9ba3b4;
+    --accent: #7c6cf2;
+    --accent-2: #6858df;
     --danger: #ff6b6b;
-    --radius: 12px;
+    --radius: 16px;
   }
   @media (prefers-color-scheme: light) {
     :root {
-      --bg: #f4f6fb;
+      --bg: #f7f7fb;
       --panel: #ffffff;
-      --panel-2: #f0f3f9;
-      --border: #dfe4ee;
-      --text: #1a1f2b;
-      --muted: #63708a;
-      --accent: #3f6fe0;
-      --accent-2: #2f5bd0;
+      --panel-2: #f7f7fa;
+      --border: #e3e4ea;
+      --text: #17181d;
+      --muted: #6f7480;
+      --accent: #6557d9;
+      --accent-2: #5548c6;
     }
   }
   * { box-sizing: border-box; }
@@ -38,68 +38,85 @@
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 1040px; margin: 0 auto; padding: 32px 20px 64px; }
-  header h1 { font-size: 24px; margin: 0 0 4px; letter-spacing: -0.02em; }
-  header p { margin: 0 0 28px; color: var(--muted); font-size: 14px; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 56px 20px 40px; }
+  header { max-width: 650px; margin: 0 auto 36px; text-align: center; }
+  header h1 { font-size: clamp(32px, 5vw, 46px); margin: 0 0 8px; letter-spacing: -0.045em; line-height: 1.08; }
+  header p { margin: 0; color: var(--muted); font-size: 16px; }
   .free-badge {
     display: inline-flex; align-items: center; gap: 8px;
-    margin: 0 0 14px; padding: 7px 11px;
-    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
-    border-radius: 999px; background: color-mix(in srgb, var(--accent) 12%, var(--panel));
-    color: var(--text); font-size: 13px; font-weight: 750;
+    margin: 0 0 16px; padding: 6px 10px;
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    border-radius: 999px; background: color-mix(in srgb, var(--accent) 9%, var(--panel));
+    color: var(--text); font-size: 12px; font-weight: 700;
   }
-  .grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 20px; align-items: start; }
   @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
   .panel {
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 20px;
+    padding: 24px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.08);
   }
-  label { display: block; font-size: 13px; font-weight: 600; margin: 0 0 6px; }
+  label { display: block; font-size: 13px; font-weight: 650; margin: 0 0 8px; }
   .hint { font-size: 12px; color: var(--muted); font-weight: 400; margin-top: 4px; }
   textarea, input[type=text], input[type=number], select {
     width: 100%;
     background: var(--panel-2);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
     color: var(--text);
-    padding: 10px 12px;
-    font-size: 14px;
+    padding: 12px 14px;
+    font-size: 15px;
     font-family: inherit;
     resize: vertical;
   }
-  textarea { min-height: 120px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  textarea { min-height: 190px; font-family: inherit; line-height: 1.55; }
   textarea:focus, input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
-  .field { margin-bottom: 18px; }
+  .field { margin-bottom: 20px; }
   .row { display: flex; gap: 14px; }
   .row > .field { flex: 1; margin-bottom: 0; }
   .colors { display: flex; gap: 16px; align-items: flex-end; }
   .colorwrap { display: flex; align-items: center; gap: 8px; }
   input[type=color] {
-    width: 40px; height: 36px; padding: 0; border: 1px solid var(--border);
-    border-radius: 8px; background: none; cursor: pointer;
+    width: 42px; height: 38px; padding: 2px; border: 1px solid var(--border);
+    border-radius: 9px; background: var(--panel-2); cursor: pointer;
   }
   .preview-panel { position: sticky; top: 24px; }
   .qr-stage {
-    background: #ffffff; border-radius: 10px; padding: 18px;
+    background: #ffffff; border-radius: 12px; padding: 24px;
     display: flex; align-items: center; justify-content: center;
-    border: 1px solid var(--border); min-height: 240px;
+    border: 1px solid var(--border); min-height: 310px;
   }
   .qr-stage svg { width: 100%; height: auto; max-width: 300px; display: block; }
-  .meta { font-size: 12px; color: var(--muted); text-align: center; margin: 12px 0 16px; min-height: 16px; }
-  .downloads { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .meta { font-size: 12px; color: var(--muted); text-align: center; margin: 12px 0 18px; min-height: 16px; }
+  .downloads { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .downloads button {
     padding: 11px 0; font-size: 13px; font-weight: 700;
-    background: var(--accent); color: #fff; border: none; border-radius: 8px; cursor: pointer;
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: 9px; cursor: pointer;
   }
-  .downloads button:hover { background: var(--accent-2); }
+  .downloads button:hover { border-color: var(--accent); }
+  .downloads #dl-png { grid-column: 1 / -1; background: var(--accent); color: #fff; border-color: var(--accent); }
+  .downloads #dl-png:hover { background: var(--accent-2); border-color: var(--accent-2); }
   .downloads button:disabled { opacity: 0.4; cursor: not-allowed; }
-  .err { color: var(--danger); font-size: 13px; margin-top: 8px; min-height: 18px; }
-  footer { margin-top: 32px; font-size: 12px; color: var(--muted); text-align: center; }
+  .err { color: var(--danger); font-size: 13px; margin-top: 12px; }
+  .err:empty { display: none; }
+  details { border-top: 1px solid var(--border); padding-top: 18px; }
+  summary { color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 650; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; float: right; font-size: 18px; line-height: 1; }
+  details[open] summary::after { content: "−"; }
+  .customize { padding-top: 20px; }
+  .customize .row + .row { margin-top: 18px; }
+  footer { margin-top: 28px; font-size: 12px; color: var(--muted); text-align: center; }
   footer strong { color: var(--text); }
-  .toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; }
-  .toggle input { width: auto; }
+  @media (max-width: 560px) {
+    .wrap { padding: 32px 14px 28px; }
+    header { margin-bottom: 24px; }
+    .panel { padding: 18px; }
+    .qr-stage { min-height: 260px; }
+    .row { flex-direction: column; }
+  }
 </style>
 </head>
 <body>
@@ -107,39 +124,43 @@
   <header>
     <div class="free-badge" aria-label="Free forever">✓ Free forever — no sign-up, limits, or fees</div>
     <h1>QR Creator</h1>
-    <p>Make unlimited QR codes at no cost, forever. Downloads encode your content directly — no redirect, no tracking, no server. Runs entirely in your browser and works offline.</p>
+    <p>Paste anything. Get a QR code instantly.</p>
   </header>
 
   <div class="grid">
     <!-- Controls -->
     <div class="panel">
       <div class="field">
-        <label for="input">Content
+        <label for="input">Link or text
           <span class="hint" id="modeHint"></span>
         </label>
-        <textarea id="input" placeholder="https://example.com or any text…" spellcheck="false">https://example.com</textarea>
+        <textarea id="input" placeholder="Paste a URL, message, contact details…" spellcheck="false">https://example.com</textarea>
       </div>
 
-      <div class="row" style="margin-bottom:18px;">
-        <div class="field">
-          <label>Colors</label>
-          <div class="colors">
-            <div class="colorwrap"><input type="color" id="fg" value="#000000"><span class="hint">Dark</span></div>
-            <div class="colorwrap"><input type="color" id="bg" value="#ffffff"><span class="hint">Light</span></div>
+      <details>
+        <summary>Customize</summary>
+        <div class="customize">
+          <div class="row">
+            <div class="field">
+              <label>Colors</label>
+              <div class="colors">
+                <div class="colorwrap"><input type="color" id="fg" value="#000000" aria-label="QR color"><span class="hint">QR</span></div>
+                <div class="colorwrap"><input type="color" id="bg" value="#ffffff" aria-label="Background color"><span class="hint">Background</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="quiet">Margin</label>
+              <input type="number" id="quiet" value="2" min="0" max="16" step="1">
+            </div>
+            <div class="field">
+              <label for="pngsize">PNG resolution</label>
+              <input type="number" id="pngsize" value="1024" min="64" max="4096" step="64">
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="field">
-          <label for="quiet">Quiet zone (modules)</label>
-          <input type="number" id="quiet" value="4" min="0" max="16" step="1">
-        </div>
-        <div class="field">
-          <label for="pngsize">PNG size (px)</label>
-          <input type="number" id="pngsize" value="1024" min="64" max="4096" step="64">
-        </div>
-      </div>
+      </details>
       <div class="err" id="error"></div>
     </div>
 
@@ -148,15 +169,15 @@
       <div class="qr-stage" id="stage"></div>
       <div class="meta" id="meta"></div>
       <div class="downloads">
+        <button id="dl-png" disabled>Download PNG</button>
         <button id="dl-svg" disabled>SVG</button>
-        <button id="dl-png" disabled>PNG</button>
         <button id="dl-pdf" disabled>PDF</button>
       </div>
     </div>
   </div>
 
   <footer>
-    <strong>Free forever and 100% offline.</strong> Save this file and it keeps working with no internet. Nothing you type ever leaves this page.
+    <strong>Private by design.</strong> Everything stays in your browser. Free forever.
   </footer>
 </div>
 
